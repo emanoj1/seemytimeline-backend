@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
   {
@@ -18,6 +18,9 @@ const userSchema = mongoose.Schema(
     vanityUrl: {
       type: String,
       unique: true,
+      default: function() {
+        return this.name.toLowerCase().replace(/\s+/g, '') + Date.now();  // Example unique default
+      },
     },
     profileImage: {
       type: String,
@@ -49,4 +52,5 @@ const userSchema = mongoose.Schema(
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;
+

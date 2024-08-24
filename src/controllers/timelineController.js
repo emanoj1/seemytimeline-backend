@@ -1,9 +1,9 @@
-import Timeline from '../models/Timeline.js';
+const Timeline = require('../models/Timeline');
 
 // @desc    Create new timeline entry
 // @route   POST /api/timeline
 // @access  Private
-export const createTimelineEntry = async (req, res) => {
+const createTimelineEntry = async (req, res) => {
   const { year, content, image } = req.body;
 
   const entry = new Timeline({
@@ -20,7 +20,13 @@ export const createTimelineEntry = async (req, res) => {
 // @desc    Get timeline entries
 // @route   GET /api/timeline
 // @access  Private
-export const getTimelineEntries = async (req, res) => {
+const getTimelineEntries = async (req, res) => {
   const entries = await Timeline.find({ user: req.user.id }).sort({ year: 1 });
   res.json(entries);
 };
+
+module.exports = {
+  createTimelineEntry,
+  getTimelineEntries,
+};
+

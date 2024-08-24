@@ -1,9 +1,9 @@
-import User from '../models/User.js';
+const User = require('../models/User');
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-export const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res) => {
   const user = await User.findById(req.user.id);
 
   if (user) {
@@ -24,7 +24,7 @@ export const getUserProfile = async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-export const updateUserProfile = async (req, res) => {
+const updateUserProfile = async (req, res) => {
   const user = await User.findById(req.user.id);
 
   if (user) {
@@ -48,3 +48,9 @@ export const updateUserProfile = async (req, res) => {
     res.status(404).json({ message: 'User not found' });
   }
 };
+
+module.exports = {
+  getUserProfile,
+  updateUserProfile,
+};
+

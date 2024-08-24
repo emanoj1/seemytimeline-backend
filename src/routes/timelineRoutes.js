@@ -1,9 +1,9 @@
-import express from 'express';
-import { createTimelineEntry, getTimelineEntries } from '../controllers/timelineController.js';
-import { protect } from '../middleware/auth.js';
-
+const express = require('express');
+const { createTimelineEntry, getTimelineEntries } = require('../controllers/timelineController');
+const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
-router.route('/').post(protect, createTimelineEntry).get(protect, getTimelineEntries);
+router.route('/').post(verifyToken, createTimelineEntry).get(verifyToken, getTimelineEntries);
 
-export default router;
+module.exports = router;
+

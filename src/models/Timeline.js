@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const timelineSchema = mongoose.Schema(
   {
@@ -27,4 +27,5 @@ const timelineSchema = mongoose.Schema(
 
 const Timeline = mongoose.model('Timeline', timelineSchema);
 
-export default Timeline;
+module.exports = Timeline;
+
