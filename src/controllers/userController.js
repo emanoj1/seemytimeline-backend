@@ -4,20 +4,15 @@ const User = require('../models/User');
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
-
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      followers: user.followers,
-      following: user.following,
-      vanityUrl: user.vanityUrl,
-      profileImage: user.profileImage,
-    });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -25,27 +20,19 @@ const getUserProfile = async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
+  try {
+    const updates = req.body;
 
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.vanityUrl = req.body.vanityUrl || user.vanityUrl;
-    user.profileImage = req.body.profileImage || user.profileImage;
-    user.tagline = req.body.tagline || user.tagline;
-    user.socialLinks = req.body.socialLinks || user.socialLinks;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select('-password');
 
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      vanityUrl: updatedUser.vanityUrl,
-      profileImage: updatedUser.profileImage,
-    });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
